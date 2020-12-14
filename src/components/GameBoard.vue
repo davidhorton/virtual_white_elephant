@@ -112,7 +112,6 @@
     name: "GameBoard",
     data() {
       return {
-        showedFirstTubeGuy: false,
         finished: false,
         doingEndSwap: false,
         firstPlayerEndSwap: config.firstPlayerEndSwap,
@@ -157,19 +156,6 @@
       onOpenGift(gift) {
         this.registerPlayerTime();
         this.justOpenedGift = gift;
-
-        //Tube guy logic=============================
-        if (gift.videoName === "tubeguy") {
-          if (this.showedFirstTubeGuy) {
-            gift.videoName = "tubeguy2";
-          }
-          else {
-            gift.videoName = "tubeguy1";
-            this.showedFirstTubeGuy = true;
-          }
-        }
-        //==========================================
-
         this.showBigGift = true;
         gift.opened = true;
         this.currentPlayer.selected = true;
