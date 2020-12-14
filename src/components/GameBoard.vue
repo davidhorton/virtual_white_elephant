@@ -344,7 +344,7 @@
         Velocity(el, { opacity: 1 }, { duration: 1});
       },
       enterBigGift(el) {
-        Velocity(el, { opacity: 1, width: '900px', height: '720px', 'margin-left': '-450px', top: '300px' }, { duration: 1000 });
+        Velocity(el, { opacity: 1, width: '900px', height: '720px', 'margin-left': '-450px', top: '150px' }, { duration: 1000 });
         Velocity(el, { width: '900px' }, { duration: 600});
         Velocity(el, { rotateY: '90deg' }, { duration: 300});
       },
@@ -352,7 +352,7 @@
         Velocity(el, { opacity: 0 }, { duration: 1599});
         Velocity(el, { opacity: 1 }, { duration: 1});
         Velocity(el, { rotateY: '90deg' }, { duration: 300, loop: 1});
-        Velocity(el, { width: '1800px', height: '1200px', 'margin-left': '-900px', top: '200px' }, { duration: 2000 });
+        Velocity(el, { width: '1800px', height: '1200px', 'margin-left': '-900px', top: '50px' }, { duration: 2000 });
       },
       enterAfterGiftButton(el) {
         Velocity(el, { opacity: 0 }, { duration: 4499});
@@ -469,7 +469,7 @@
     width: 850px;
     height: 510px;
     margin-left: -425px;
-    top: 510px;
+    top: 360px;
   }
   #continue-after-gift-button {
     opacity: 0;
@@ -477,7 +477,7 @@
     position: fixed;
     left: 50%;
     margin-left: -190px;
-    top: 1270px;
+    top: 1120px;
     z-index: 999999999;
     height: 80px;
   }
@@ -517,7 +517,7 @@
     opacity: 0;
     z-index: 99999999;
     width: 1450px;
-    top: 390px;
+    top: 240px;
     margin-left: -725px;
     left: 50%;
   }
