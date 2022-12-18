@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 src/assets/giftvideos
 src/assets/welcome.mp4
+src/assets/welcome.mov
 src/gameDefinition.js
 
 # Editor directories and files

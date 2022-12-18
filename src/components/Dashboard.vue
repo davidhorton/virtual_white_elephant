@@ -3,13 +3,13 @@
     <video autoplay muted loop id="background-video">
       <source src="../assets/background.mp4" type="video/mp4">
     </video>
-    <img id="title" src="../assets/title20.png" alt="title">
+    <img id="title" src="../assets/title22.png" alt="title">
 
     <div v-if="waitingToStart">
       <b-button @click="()=>{onStartGame()}" id="start-button" size="lg" variant="primary">LET THE GAME BEGIN!</b-button>
       <img id="welcome-video-border" src="../assets/titleBlack.png" alt="title">
       <video autoplay muted loop id="welcome-video">
-        <source src="../assets/welcome.mp4" type="video/mp4">
+        <source src="../assets/welcome.mov" type="video/mp4">
       </video>
     </div>
 

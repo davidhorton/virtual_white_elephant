@@ -16,7 +16,7 @@
     </transition>
     <transition v-on:enter="enterAfterGiftVideo" v-bind:css="false">
       <video v-if="showBigGift" id="gift-video" ref="giftVideo">
-        <source v-bind:src="require('../assets/giftvideos/' + justOpenedGift.videoName + '.mp4')" type="video/mp4">
+        <source v-bind:src="require('../assets/giftvideos/' + justOpenedGift.videoName)" type="video/mp4">
       </video>
     </transition>
 
@@ -33,7 +33,7 @@
 
     <div style="position: fixed; left: -1000px;">
       <label for="justOpenedGiftUrlInput"></label>
-      <input ref="justOpenedGiftUrlRef" type="text" v-model="justOpenedGift.url" id="justOpenedGiftUrlInput">
+      <input ref="justOpenedGiftUrlRef" type="text" v-model="justOpenedGiftUrl" id="justOpenedGiftUrlInput">
     </div>
 
     <div v-if="!finished">
@@ -137,6 +137,11 @@
         mostPickedOnFields: [],
         slowPokesFields: [],
       };
+    },
+    computed: {
+      justOpenedGiftUrl() {
+        return this.justOpenedGift.description + ": " + this.justOpenedGift.url
+      }
     },
     methods: {
       findPlayerByOrder(order) {
