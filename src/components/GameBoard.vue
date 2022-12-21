@@ -116,6 +116,7 @@
         doingEndSwap: false,
         firstPlayerEndSwap: config.firstPlayerEndSwap,
         firstPlayerEndSwapStrict: config.firstPlayerEndSwapStrict,
+        randomizeGiftPlacement: config.randomizeGiftPlacement,
         firstPlayerWasStolenFrom: false,
         showGiftVideo: false,
         showBigGift: false,
@@ -356,8 +357,30 @@
       },
     },
     mounted() {
+      function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      //Either randomize the gifts or put them in the pre-defined order
+      if (this.randomizeGiftPlacement) {
+        this.gifts = shuffle(this.gifts);
+      } else {
+        const tempGifts = []
+        for (let i = 0; i < this.gifts.length; i++) {
+          for (let j = 0; j < this.gifts.length; j++) {
+            const gift = this.gifts[j];
+            if (gift.number === (i + 1)) {
+              tempGifts.push(gift);
+            }
+          }
+        }
+        this.gifts = tempGifts;
+      }
       //Assign random gift colors
-      this.gifts = shuffle(this.gifts);
       const possibleGiftColors = ["blue", "green", "orange", "pink", "red", "yellow"]
       for (let i = 0; i < this.gifts.length; i++) {
         const gift = this.gifts[i];
@@ -366,13 +389,6 @@
       }
 
       //Shuffle the order of the players
-      function shuffle(a) {
-        for (let i = a.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [a[i], a[j]] = [a[j], a[i]];
-        }
-        return a;
-      }
       this.players = shuffle(this.players);
 
       //Split the players into 3 groups
