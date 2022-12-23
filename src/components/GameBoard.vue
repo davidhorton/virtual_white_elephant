@@ -25,10 +25,21 @@
       <img v-if="showStealEventText" class="big-gift" v-bind:src="require('../assets/stealBorder.png')" alt="big gift">
     </transition>
     <transition v-on:enter="enterStealOtherStuff" v-bind:css="false">
-      <h1 id="steal-event-text" v-if="showStealEventText">{{stealEventText}}</h1>
+      <h1 class="steal-event-text" v-if="showStealEventText">{{stealEventText}}</h1>
     </transition>
     <transition v-on:enter="enterStealOtherStuff" v-bind:css="false">
       <b-button v-if="showStealEventText" @click="onContinueAfterSteal" id="steal-event-continue-button" variant="error">Continue -></b-button>
+    </transition>
+
+    <!--The "mom is not allowed to end the game" transitions-->
+    <transition v-on:enter="enterProhibitedEndBorder" v-bind:css="false">
+      <img v-if="showProhibitedEndEventText" class="big-gift" v-bind:src="require('../assets/stealBorder.png')" alt="big gift">
+    </transition>
+    <transition v-on:enter="enterProhibitedEndOtherStuff" v-bind:css="false">
+      <h1 class="steal-event-text" v-if="showProhibitedEndEventText">{{prohibitedEndEventText}}</h1>
+    </transition>
+    <transition v-on:enter="enterProhibitedEndOtherStuff" v-bind:css="false">
+      <b-button v-if="showProhibitedEndEventText" @click="onContinueAfterProhibitedEnd" id="prohibited-end-continue-button" variant="error">Continue -></b-button>
     </transition>
 
     <div style="position: fixed; left: -1000px;">
@@ -125,8 +136,11 @@
         justStolenGiftID: 0,
         showStealEventText: false,
         stealEventText: '',
+        showProhibitedEndEventText: false,
+        prohibitedEndEventText: '',
         currentPlayer: {},
         lastTurnStartTime: 0,
+        openedGiftCount: 0,
         players: config.players,
         gifts: config.gifts,
         playersColumn1: [],
@@ -160,6 +174,17 @@
         this.lastTurnStartTime = new Date().getTime();
       },
       onOpenGift(gift) {
+        if (this.openedGiftCount + 1 >= this.gifts.length && this.currentPlayer.isProhibitedFromEnding) {
+          this.prohibitedEndEventText = this.currentPlayer.name + " isn't allowed to end the game. Steal something!";
+          this.showProhibitedEndEventText = true;
+          setTimeout(() => {
+            const audio = new Audio(require('../assets/stealSound.mp3'));
+            audio.play();
+          }, 300);
+          return;
+        }
+
+        this.openedGiftCount++;
         this.registerPlayerTime();
         this.justOpenedGift = gift;
         this.showBigGift = true;
@@ -169,6 +194,9 @@
           const audio = new Audio(require('../assets/openGiftSound.mp3'));
           audio.play();
         }, 300);
+      },
+      onContinueAfterProhibitedEnd() {
+        this.showProhibitedEndEventText = false;
       },
       stealFromPlayer(playerGettingRobbed) {
         if (!this.doingEndSwap && (playerGettingRobbed.giftID <= 0 || this.justStolenGiftID === playerGettingRobbed.giftID)) {
@@ -335,6 +363,13 @@
         Velocity(el, { opacity: 0 }, { duration: 999});
         Velocity(el, { opacity: 1 }, { duration: 1});
       },
+      enterProhibitedEndBorder(el) {
+        Velocity(el, { opacity: 1, width: '1400px', height: '720px', 'margin-left': '-700px', top: '300px' }, { duration: 1000 });
+      },
+      enterProhibitedEndOtherStuff(el) {
+        Velocity(el, { opacity: 0 }, { duration: 999});
+        Velocity(el, { opacity: 1 }, { duration: 1});
+      },
       enterBigGift(el) {
         Velocity(el, { opacity: 1, width: '900px', height: '720px', 'margin-left': '-450px', top: '150px' }, { duration: 1000 });
         Velocity(el, { width: '900px' }, { duration: 600});
@@ -495,7 +530,7 @@
     top: 0;
     z-index: 999999999;
   }
-  #steal-event-text {
+  .steal-event-text {
     opacity: 0;
     position: fixed;
     color: white;
@@ -508,6 +543,18 @@
     font-size: 40px;
   }
   #steal-event-continue-button {
+    opacity: 0;
+    position: fixed;
+    color: white;
+    z-index: 99999999;
+    width: 300px;
+    margin-left: -150px;
+    top: 800px;
+    left: 50%;
+    text-align: center;
+    font-size: 40px;
+  }
+  #prohibited-end-continue-button {
     opacity: 0;
     position: fixed;
     color: white;
