@@ -12,10 +12,12 @@ Here's how you set it up:
     the name of the video file in src/assets/giftvideos (without the extension). And the url field of the gift is what
     gets copied to your clipboard when you click the "Copy URL" button after opening a new gift in the game (handy
     if you want to paste the details of the gift into a group chat as the game progresses).
-    - There are two other config options you'll see in there that aren't gifts are people: firstPlayerEndSwap and firstPlayerEndSwapStrict.
+    - There are two other config options you'll see in there that aren't gifts or people: firstPlayerEndSwap and firstPlayerEndSwapStrict.
     For firstPlayerEndSwap, that means at the end of the game if the 1st player hasn't been stolen from they will have a
     chance to swap. For firstPlayerEndSwapStrict, that means the 1st player will have a chance to steal regardless of
     whether they've been stolen from or not.
+    - Another recently added config option is randomizeGiftPlacement. If this is true then the gift number is ignored and reset
+    randomly, if it is false then the gifts are not randomized and they are placed based on the gift number.
 - Create a video called welcome.mp4 and place it in to src/assets. This is the video that plays on a loop before the game starts.
 - Run `npm install` and then `npm run dev` in the root of the project (you'll need npm installed).
 - Play the game! At the end it will give some reports that you can just copy from the browser and send to everyone.
