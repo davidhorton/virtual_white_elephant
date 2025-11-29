@@ -3,7 +3,7 @@
     <video autoplay muted loop id="background-video">
       <source src="../assets/background.mp4" type="video/mp4">
     </video>
-    <img id="title" src="../assets/title23.png" alt="title">
+    <img id="title" src="../assets/title24.png" alt="title">
 
     <div v-if="waitingToStart">
       <b-button @click="()=>{onStartGame()}" id="start-button" size="lg" variant="primary">LET THE GAME BEGIN!</b-button>

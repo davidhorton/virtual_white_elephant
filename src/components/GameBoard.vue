@@ -423,8 +423,14 @@
         gift.color = possibleGiftColors[Math.floor(Math.random() * possibleGiftColors.length)];
       }
 
-      //Shuffle the order of the players
-      this.players = shuffle(this.players);
+      const playersSorted = [];
+      for (let i = 0; i < this.players.length; i++) {
+        console.log("searching for order " + (i + 1))
+        const player = this.findPlayerByOrder(i + 1)
+        console.log("Found " + player.name)
+        playersSorted.push(player);
+      }
+      this.players = playersSorted;
 
       //Split the players into 3 groups
       let listCounter = 1;
@@ -461,7 +467,9 @@
         playerCounter++;
       }
 
+      console.log("about to do this")
       this.currentPlayer = this.findPlayerByOrder(1);
+      console.log("current player" + this.currentPlayer.name)
       this.restartTurnTime();
     },
   }
