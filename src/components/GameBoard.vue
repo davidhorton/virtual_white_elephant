@@ -635,9 +635,11 @@
     opacity: 0;
     z-index: 99999999;
     width: 1450px;
+    height: 820px;
     top: 240px;
     margin-left: -725px;
     left: 50%;
+    object-fit: contain;
   }
   .report-header {
     margin-top: 30px;
