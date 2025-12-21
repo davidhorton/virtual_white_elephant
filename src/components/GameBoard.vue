@@ -115,6 +115,11 @@
         <b-table striped hover :items="players" :fields="slowPokesFields" sort-by="timeSpentMilliseconds" sort-desc=true></b-table>
       </b-container>
     </div>
+
+    <div id="steal-counter-container" v-if="stealLimitInPlace">
+      <h1>Steal Limit: {{stealLimitThisRound}}</h1>
+      <h1>Steal Count: {{stealCountThisRound}}</h1>
+    </div>
   </div>
 </template>
 
@@ -131,6 +136,7 @@
         firstPlayerEndSwap: config.firstPlayerEndSwap,
         firstPlayerEndSwapStrict: config.firstPlayerEndSwapStrict,
         randomizeGiftPlacement: config.randomizeGiftPlacement,
+        stealLimitStartFromEnd: config.stealLimitStartFromEnd,
         firstPlayerWasStolenFrom: false,
         showGiftVideo: false,
         showBigGift: false,
@@ -156,6 +162,9 @@
         biggestStealersFields: [],
         mostPickedOnFields: [],
         slowPokesFields: [],
+        stealLimitInPlace: false,
+        stealLimitThisRound: config.stealLimitStartingValue,
+        stealCountThisRound: 0,
       };
     },
     computed: {
@@ -191,6 +200,15 @@
         }
 
         this.openedGiftCount++;
+        if (this.gifts.length - this.openedGiftCount <= this.stealLimitStartFromEnd) {
+          this.stealLimitInPlace = true;
+          this.stealLimitThisRound++;
+        }
+        if (this.openedGiftCount >= (this.gifts.length - 1)) { //don't have a limit in the last round - for chaos!
+          this.stealLimitInPlace = false;
+        }
+
+        this.stealCountThisRound = 0;
         this.registerPlayerTime();
         this.justOpenedGift = gift;
         this.showBigGift = true;
@@ -214,12 +232,17 @@
           return;
         }
 
+        if (this.stealCountThisRound >= this.stealLimitThisRound) {
+          return;
+        }
+
         this.registerPlayerTime();
 
         if (playerGettingRobbed.order === 1) {
           this.firstPlayerWasStolenFrom = true;
         }
 
+        this.stealCountThisRound++;
         this.stealEventText = this.currentPlayer.name + " stole the \"" + playerGettingRobbed.giftDesc + "\" from " + playerGettingRobbed.name + "!";
         this.justStoleSomething = true;
         this.justStolenGiftID = playerGettingRobbed.giftID;
@@ -596,6 +619,16 @@
     left: 65%;
     text-align: center;
     font-size: 35px;
+  }
+  #steal-counter-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 99999999;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
   }
   #gift-video {
     position: fixed;
