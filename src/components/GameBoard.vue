@@ -59,25 +59,25 @@
         <b-row>
           <b-col>
             <b-list-group>
-              <b-list-group-item class="player-list-item" v-for="player in playersColumn1" @click="()=>{stealFromPlayer(player)}" :key="player.id" button :active="player.selected">
+              <b-list-group-item class="player-list-item" :class="{ player_list_item_bonus: player.bonusEligible}" v-for="player in playersColumn1" @click="()=>{stealFromPlayer(player)}" :key="player.id" button :active="player.selected">
                 #{{player.order}} {{player.name}}
-                <span style="float: right">{{player.giftDesc}}</span>
+                <span class="player-gift-text">{{player.giftDesc}}</span>
               </b-list-group-item>
             </b-list-group>
           </b-col>
           <b-col>
             <b-list-group>
-              <b-list-group-item class="player-list-item" v-for="player in playersColumn2" @click="()=>{stealFromPlayer(player)}" :key="player.id" button :active="player.selected">
+              <b-list-group-item class="player-list-item" :class="{ player_list_item_bonus: player.bonusEligible}" v-for="player in playersColumn2" @click="()=>{stealFromPlayer(player)}" :key="player.id" button :active="player.selected">
                 #{{player.order}} {{player.name}}
-                <span style="float: right">{{player.giftDesc}}</span>
+                <span class="player-gift-text">{{player.giftDesc}}</span>
               </b-list-group-item>
             </b-list-group>
           </b-col>
           <b-col>
             <b-list-group>
-              <b-list-group-item class="player-list-item" v-for="player in playersColumn3" @click="()=>{stealFromPlayer(player)}" :key="player.id" button :active="player.selected">
+              <b-list-group-item class="player-list-item" :class="{ player_list_item_bonus: player.bonusEligible}" v-for="player in playersColumn3" @click="()=>{stealFromPlayer(player)}" :key="player.id" button :active="player.selected">
                 #{{player.order}} {{player.name}}
-                <span style="float: right">{{player.giftDesc}}</span>
+                <span class="player-gift-text">{{player.giftDesc}}</span>
               </b-list-group-item>
             </b-list-group>
           </b-col>
@@ -137,6 +137,7 @@
         firstPlayerEndSwapStrict: config.firstPlayerEndSwapStrict,
         randomizeGiftPlacement: config.randomizeGiftPlacement,
         stealLimitStartFromEnd: config.stealLimitStartFromEnd,
+        bonusGiftEligibleNumber: config.bonusGiftEligibleNumber,
         firstPlayerWasStolenFrom: false,
         showGiftVideo: false,
         showBigGift: false,
@@ -208,6 +209,12 @@
           this.stealLimitInPlace = false;
         }
 
+        this.currentPlayer.roundLastOpened = this.openedGiftCount;
+        for (let i = 0; i < this.players.length; i++) {
+          const aPlayer = this.players[i];
+          aPlayer.bonusEligible = aPlayer.roundLastOpened > 0 && aPlayer.stolenFromCount === 0 && ((this.openedGiftCount - this.bonusGiftEligibleNumber) >= aPlayer.roundLastOpened);
+        }
+
         this.stealCountThisRound = 0;
         this.registerPlayerTime();
         this.justOpenedGift = gift;
@@ -242,8 +249,10 @@
           this.firstPlayerWasStolenFrom = true;
         }
 
+        const getsABonus = playerGettingRobbed.bonusEligible;
+        playerGettingRobbed.bonusEligible = false;
         this.stealCountThisRound++;
-        this.stealEventText = this.currentPlayer.name + " stole the \"" + playerGettingRobbed.giftDesc + "\" from " + playerGettingRobbed.name + "!";
+        this.stealEventText = this.currentPlayer.name + " stole the \"" + playerGettingRobbed.giftDesc + "\" from " + playerGettingRobbed.name + "!" + (getsABonus ? " Plus a bonus!": "");
         this.justStoleSomething = true;
         this.justStolenGiftID = playerGettingRobbed.giftID;
         this.currentPlayer.selected = true;
@@ -521,6 +530,9 @@
   .player-list-item {
     font-size: 22px;
   }
+  .player_list_item_bonus {
+    background-color: green;
+  }
   .gift-area {
     cursor: pointer;
   }
@@ -643,5 +655,8 @@
   }
   .report-header {
     margin-top: 30px;
+  }
+  .player-gift-text {
+    float: right
   }
 </style>
