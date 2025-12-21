@@ -39,7 +39,10 @@
       <h1 class="steal-event-text" v-if="showProhibitedEndEventText">{{prohibitedEndEventText}}</h1>
     </transition>
     <transition v-on:enter="enterProhibitedEndOtherStuff" v-bind:css="false">
-      <b-button v-if="showProhibitedEndEventText" @click="onContinueAfterProhibitedEnd" id="prohibited-end-continue-button" variant="error">Continue -></b-button>
+      <b-button v-if="showProhibitedEndEventText" @click="onContinueAfterProhibitedEndYup" id="prohibited-end-yup-button" variant="error">Yup!</b-button>
+    </transition>
+    <transition v-on:enter="enterProhibitedEndOtherStuff" v-bind:css="false">
+      <b-button v-if="showProhibitedEndEventText" @click="onContinueAfterProhibitedEndNope" id="prohibited-end-nope-button" variant="error">Nope!</b-button>
     </transition>
 
     <div style="position: fixed; left: -1000px;">
@@ -138,6 +141,8 @@
         stealEventText: '',
         showProhibitedEndEventText: false,
         prohibitedEndEventText: '',
+        lastGift: {},
+        endOverride: false,
         currentPlayer: {},
         lastTurnStartTime: 0,
         openedGiftCount: 0,
@@ -174,9 +179,10 @@
         this.lastTurnStartTime = new Date().getTime();
       },
       onOpenGift(gift) {
-        if (this.openedGiftCount + 1 >= this.gifts.length && this.currentPlayer.isProhibitedFromEnding) {
-          this.prohibitedEndEventText = this.currentPlayer.name + " isn't allowed to end the game. Steal something!";
+        if (!this.endOverride && this.openedGiftCount + 1 >= this.gifts.length && this.currentPlayer.isProhibitedFromEnding) {
+          this.prohibitedEndEventText =  "Time for a vote! Is " + this.currentPlayer.name + " allowed to end the game?";
           this.showProhibitedEndEventText = true;
+          this.lastGift = gift;
           setTimeout(() => {
             const audio = new Audio(require('../assets/stealSound.mp3'));
             audio.play();
@@ -195,7 +201,12 @@
           audio.play();
         }, 300);
       },
-      onContinueAfterProhibitedEnd() {
+      onContinueAfterProhibitedEndYup() {
+        this.showProhibitedEndEventText = false;
+        this.endOverride = true;
+        this.onOpenGift(this.lastGift);
+      },
+      onContinueAfterProhibitedEndNope() {
         this.showProhibitedEndEventText = false;
       },
       stealFromPlayer(playerGettingRobbed) {
@@ -562,7 +573,7 @@
     text-align: center;
     font-size: 40px;
   }
-  #prohibited-end-continue-button {
+  #prohibited-end-yup-button {
     opacity: 0;
     position: fixed;
     color: white;
@@ -570,9 +581,21 @@
     width: 300px;
     margin-left: -150px;
     top: 800px;
-    left: 50%;
+    left: 35%;
     text-align: center;
     font-size: 40px;
+  }
+  #prohibited-end-nope-button {
+    opacity: 0;
+    position: fixed;
+    color: white;
+    z-index: 99999999;
+    width: 300px;
+    margin-left: -150px;
+    top: 800px;
+    left: 65%;
+    text-align: center;
+    font-size: 35px;
   }
   #gift-video {
     position: fixed;
