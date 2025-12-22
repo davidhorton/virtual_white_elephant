@@ -239,7 +239,7 @@
           return;
         }
 
-        if (this.stealCountThisRound >= this.stealLimitThisRound) {
+        if (this.stealLimitInPlace && this.stealCountThisRound >= this.stealLimitThisRound) {
           return;
         }
 
